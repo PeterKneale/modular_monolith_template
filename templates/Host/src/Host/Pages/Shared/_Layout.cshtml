@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @* https://tabler.io/docs/getting-started/download *@
+    <script src="https://cdn.jsdelivr.net/npm/@@tabler/core@1.0.0-beta21/dist/js/tabler.min.js"
+            integrity="sha256-c01wM5Q9GIKYbvvjIaxt67o1CpIBkFMMmz1Dgsi0K7A=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/core@1.0.0-beta21/dist/css/tabler.min.css"
+          integrity="sha256-wyFIgQOSE12UsMJ0LkCr/k8EgdmZBOKwWlYHSjOCADM=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@3.16.0/dist/tabler-icons.min.css" 
+          integrity="sha256-Kq0HiKTUdztE9xG/ozthWrVCVRtFOXuHlvcWQcIUW5I=" crossorigin="anonymous">
+
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+
+@* https://tabler.io/docs/layout/page-layouts *@
+
+<div class="page">
+    <header class="navbar navbar-expand-sm navbar-light d-print-none">
+        <div class="container-xl">
+            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+                <a href="/">Modular Monolith Template</a>
+            </h1>
+        </div>
+    </header>
+    <div class="page-wrapper">
+        <div class="page-body">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
