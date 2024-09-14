@@ -399,3 +399,4 @@ FodyWeavers.xsd
 
 # output folder for testing templates
 output/
+.idea/

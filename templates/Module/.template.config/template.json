@@ -1,9 +1,9 @@
 {
   "$schema": "http://json.schemastore.org/template",
   "author": "Peter Kneale",
-  "classifications": ["Modular", "Monolith", "Module"],
+  "classifications": ["Modular", "Monolith", "Module", "DDD", "Dapper", "MediatR"],
   "identity": "PeterKneale.ModularMonolithModule",
-  "name": "Modular Monolith - Module",
+  "name": "Modular Monolith - Module (DDD, Dapper, MediatR)",
   "shortName": "modular-monolith-module",
   "tags": {
     "language": "C#",
