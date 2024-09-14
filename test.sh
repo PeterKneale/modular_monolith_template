@@ -14,19 +14,15 @@ OUTPUT_FOLDER=output
 rm -rf $OUTPUT_FOLDER
 mkdir -p $OUTPUT_FOLDER
 
-echo "🚀 Creating a solution with the template"
+echo "🚀 Creating solution from template"
 dotnet new modular-monolith-host -n $SOLUTION -o $OUTPUT_FOLDER
 
-dotnet new modular-monolith-module -n $MODULE1 -o $OUTPUT_FOLDER
-# dotnet new modular-monolith-module -n $MODULE2 -o $OUTPUT_FOLDER
-# dotnet new modular-monolith-module -n $MODULE3 -o $OUTPUT_FOLDER
-# dotnet sln ./output/$SOLUTION.sln add ./output/src/$MODULE1/*
-# dotnet sln ./output/$SOLUTION.sln add ./output/src/$MODULE2/*
-# dotnet sln ./output/$SOLUTION.sln add ./output/src/$MODULE3/*
+echo "🚀 Creating modules from template"
+dotnet new modular-monolith-module --force -n $MODULE1 -o $OUTPUT_FOLDER
+dotnet new modular-monolith-module --force -n $MODULE2 -o $OUTPUT_FOLDER
+dotnet new modular-monolith-module --force -n $MODULE3 -o $OUTPUT_FOLDER
 
-echo "✅ Solution created"
-
-echo "🚀 Building the solution"
+echo "🚀 Building solution"
 dotnet build $OUTPUT_FOLDER/$SOLUTION.sln
 dotnet test $OUTPUT_FOLDER/$SOLUTION.sln
 dotnet run --project $OUTPUT_FOLDER/src/Host/Host.csproj
