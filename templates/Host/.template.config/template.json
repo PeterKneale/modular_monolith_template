@@ -12,5 +12,26 @@
   "sourceName": "ModularMonolithHost",
   "defaultName": "ModularMonolithHost",
   "preferDefaultName": true,
-  "preferNameDirectory": true
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    {
+      "path": "src/Host/Host.csproj"
+    },
+    {
+      "path": "src/Common/Common.csproj"
+    }
+  ],
+  "postActions": [
+    {
+      "description": "Add projects to solution",
+      "solutionFolder": "ModularMonolithHost",
+      "manualInstructions": [
+        {
+          "text": "Add generated project(s) to solution manually."
+        }
+      ],
+      "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
+      "continueOnError": true
+    }
+  ]
 }

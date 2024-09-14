@@ -1,9 +1,16 @@
 {
   "$schema": "http://json.schemastore.org/template",
   "author": "Peter Kneale",
-  "classifications": ["Modular", "Monolith", "Module", "DDD", "Dapper", "MediatR"],
+  "classifications": [
+    "Modular",
+    "Monolith",
+    "Module",
+    "DDD",
+    "Dapper",
+    "MediatR"
+  ],
   "identity": "PeterKneale.ModularMonolithModule",
-  "name": "Modular Monolith - Module (DDD, Dapper, MediatR)",
+  "name": "Modular Monolith - Module (DDD, Dapper, MediatR, Razor Pages)",
   "shortName": "modular-monolith-module",
   "tags": {
     "language": "C#",
@@ -12,5 +19,42 @@
   "sourceName": "ModularMonolithModule",
   "defaultName": "ModularMonolithModule",
   "preferDefaultName": true,
-  "preferNameDirectory": true
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    {
+      "path": "src/ModularMonolithModule/ModularMonolithModule/ModularMonolithModule.csproj"
+    },
+    {
+      "path": "src/ModularMonolithModule/ModularMonolithModule.Api/ModularMonolithModule.Api.csproj"
+    },
+    {
+      "path": "src/ModularMonolithModule/ModularMonolithModule.Web/ModularMonolithModule.Web.csproj"
+    }
+  ],
+  "postActions": [
+    {
+      "description": "Add projects to solution",
+      "solutionFolder": "ModularMonolithModule",
+      "manualInstructions": [
+        {
+          "text": "Add generated project(s) to solution manually."
+        }
+      ],
+      "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
+      "continueOnError": true
+    },
+    {
+      "actionId": "3A7C4B45-1F5D-4A30-959A-51B88E82B5D2",
+      "description": "Run the setup script.",
+      "manualInstructions": [
+        { "text": "Run 'setup.sh' on Linux or 'setup.bat' on Windows." }
+      ],
+      "continueOnError": false,
+      "args": {
+        "executable": "bash",
+        "args": "setup.sh"
+      },
+      "conditional": "(!os.windows)"
+    }
+  ]
 }
