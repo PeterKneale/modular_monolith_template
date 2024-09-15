@@ -9,6 +9,8 @@ public static class CreateWidget
         public Validator()
         {
             RuleFor(m => m.Id).NotEmpty();
+            RuleFor(m => m.Name).NotEmpty().MaximumLength(255);
+            RuleFor(m => m.Price).GreaterThan(0).LessThan(1000000);
         }
     }
 
