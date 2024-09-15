@@ -19,6 +19,9 @@
     },
     {
       "path": "src/Common/Common.csproj"
+    },
+    {
+      "path": "tests/Host.IntegrationTests/Host.IntegrationTests.csproj"
     }
   ],
   "postActions": [
