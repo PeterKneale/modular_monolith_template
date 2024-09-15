@@ -1,18 +1,17 @@
 ﻿using System.Reflection;
 using Common.Migrations;
-using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ModularMonolithModule.Application;
-using ModularMonolithModule.infrastructure;
+using ModularMonolithModule.Infrastructure;
 
 namespace ModularMonolithModule;
 
 public static class ModularMonolithModuleStartup
 {
-    public static async Task InitializeAsync(bool resetDb)
+    public static async Task InitializeAsync(IConfiguration configuration, bool resetDb)
     {
-        const string schema = "public";
-        const string connectionString = "Server=localhost;Database=db;User Id=admin;Password=password";
+        var connectionString = configuration.GetDbConnectionString(Schema);
         var assembly = Assembly.GetExecutingAssembly();
 
         var provider = new ServiceCollection()
@@ -26,6 +25,6 @@ public static class ModularMonolithModuleStartup
             .BuildServiceProvider();
         CompositionRoot.SetProvider(provider);
 
-        DatabaseMigrations.Apply(schema, connectionString, assembly, reset: resetDb);
+        DbMigrations.Apply(Schema, connectionString, assembly, reset: resetDb);
     }
 }

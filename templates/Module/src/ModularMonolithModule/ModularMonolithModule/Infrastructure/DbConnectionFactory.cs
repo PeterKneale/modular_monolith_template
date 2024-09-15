@@ -1,7 +1,7 @@
 ﻿using ModularMonolithModule.Application;
 using Npgsql;
 
-namespace ModularMonolithModule.infrastructure;
+namespace ModularMonolithModule.Infrastructure;
 
 public class DbConnectionFactory(string connectionString) : IDbConnectionFactory
 {

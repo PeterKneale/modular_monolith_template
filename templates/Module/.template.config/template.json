@@ -29,6 +29,12 @@
     },
     {
       "path": "src/ModularMonolithModule/ModularMonolithModule.Web/ModularMonolithModule.Web.csproj"
+    },
+    {
+      "path": "tests/ModularMonolithModule/ModularMonolithModule.IntegrationTests/ModularMonolithModule.IntegrationTests.csproj"
+    },
+    {
+      "path": "tests/ModularMonolithModule/ModularMonolithModule.UnitTests/ModularMonolithModule.UnitTests.csproj"
     }
   ],
   "postActions": [

@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
 
-namespace ModularMonolithModule.infrastructure.Migrations;
+namespace ModularMonolithModule.Infrastructure.Migrations;
 
 [Migration(0)]
 public class Migration0 : Migration

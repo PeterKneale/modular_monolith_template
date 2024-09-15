@@ -1,10 +1,4 @@
-﻿using Dapper;
-using FluentValidation;
-using MediatR;
-using ModularMonolithModule.Application.Commands;
-using ModularMonolithModule.Domain;
-
-namespace ModularMonolithModule.Application.Queries;
+﻿namespace ModularMonolithModule.Application.Queries;
 
 public static class GetWidget
 {
@@ -17,7 +11,7 @@ public static class GetWidget
         public decimal Price { get; init; }
     }
 
-    public class Validator : AbstractValidator<CreateWidget.Command>
+    public class Validator : AbstractValidator<Query>
     {
         public Validator()
         {
@@ -30,8 +24,8 @@ public static class GetWidget
         public async Task<Response> Handle(Query query, CancellationToken token)
         {
             var id = query.Id;
-            
-            const string sql = "SELECT * FROM widgets WHERE id=@id";
+
+            var sql = $"SELECT * FROM {WidgetsTable} WHERE {IdColumn}=@id";
             var command = new CommandDefinition(sql, new { id }, cancellationToken: token);
             var result = await connections.Create().QuerySingleOrDefaultAsync<Response>(command);
             if (result == null)

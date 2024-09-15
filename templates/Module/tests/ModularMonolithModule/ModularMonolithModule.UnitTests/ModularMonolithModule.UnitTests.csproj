@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ModularMonolithModule\ModularMonolithModule\ModularMonolithModule.csproj" />
+    <ProjectReference Include="..\..\..\src\ModularMonolithModule\ModularMonolithModule\ModularMonolithModule.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
-using ModularMonolithModule.Domain;
-
-namespace ModularMonolithModule.Application.Commands;
+﻿namespace ModularMonolithModule.Application.Commands;
 
 public static class CreateWidget
 {

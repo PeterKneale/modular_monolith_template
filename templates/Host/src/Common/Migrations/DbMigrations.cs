@@ -8,7 +8,7 @@ using Polly.Retry;
 
 namespace Common.Migrations;
 
-public static class DatabaseMigrations
+public static class DbMigrations
 {
     private const int RetryAttempts = 10;
     private static readonly TimeSpan RetryInterval = TimeSpan.FromSeconds(1);
