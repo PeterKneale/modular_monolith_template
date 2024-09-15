@@ -2,7 +2,7 @@
 using MediatR;
 using ModularMonolithModule.Domain;
 
-namespace ModularMonolithModule.Application;
+namespace ModularMonolithModule.Application.Commands;
 
 public static class CreateWidget
 {

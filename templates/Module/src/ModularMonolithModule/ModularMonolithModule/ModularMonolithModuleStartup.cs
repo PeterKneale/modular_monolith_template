@@ -11,7 +11,8 @@ public static class ModularMonolithModuleStartup
 {
     public static async Task InitializeAsync(bool resetDb)
     {
-        const string connectionstring = "Server=localhost;Database=db;User Id=admin;Password=password";
+        const string schema = "public";
+        const string connectionString = "Server=localhost;Database=db;User Id=admin;Password=password";
         var assembly = Assembly.GetExecutingAssembly();
 
         var provider = new ServiceCollection()
@@ -19,11 +20,12 @@ public static class ModularMonolithModuleStartup
             .AddMediatR(c => c.RegisterServicesFromAssembly(assembly))
             .AddValidatorsFromAssembly(assembly)
             // infrastructure
-            .AddScoped<IWidgetRepository, WidgetRepository>(c => new WidgetRepository(connectionstring))
+            .AddScoped<IDbConnectionFactory,DbConnectionFactory>(c=>new DbConnectionFactory(connectionString))
+            .AddScoped<IWidgetRepository, WidgetRepository>()
             // builder container
             .BuildServiceProvider();
         CompositionRoot.SetProvider(provider);
 
-        DatabaseMigrations.Apply("public", connectionstring, assembly, reset: resetDb);
+        DatabaseMigrations.Apply(schema, connectionString, assembly, reset: resetDb);
     }
 }

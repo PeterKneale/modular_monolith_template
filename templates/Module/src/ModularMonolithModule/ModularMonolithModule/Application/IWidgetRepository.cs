@@ -1,4 +1,5 @@
-﻿using ModularMonolithModule.Domain;
+﻿using System.Data;
+using ModularMonolithModule.Domain;
 
 namespace ModularMonolithModule.Application;
 
