@@ -10,11 +10,11 @@ public class Migration1 : Migration
     
     public override void Up()
     {
-        Execute.Sql($"CREATE EXTENSION {ExtensionName};");
+        Execute.Sql($"CREATE EXTENSION IF NOT EXISTS {ExtensionName};");
     }
 
     public override void Down()
     {
-        Execute.Sql($"DROP EXTENSION {ExtensionName};");
+        Execute.Sql($"DROP EXTENSION IF EXISTS {ExtensionName};");
     }
 }

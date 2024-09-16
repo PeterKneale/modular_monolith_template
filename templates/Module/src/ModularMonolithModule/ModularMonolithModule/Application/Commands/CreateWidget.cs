@@ -1,4 +1,6 @@
-﻿namespace ModularMonolithModule.Application.Commands;
+﻿using Microsoft.Extensions.Logging;
+
+namespace ModularMonolithModule.Application.Commands;
 
 public static class CreateWidget
 {
@@ -14,7 +16,7 @@ public static class CreateWidget
         }
     }
 
-    public class Handler(IWidgetRepository repository) : IRequestHandler<Command>
+    public class Handler(IWidgetRepository repository, ILogger<Handler> log) : IRequestHandler<Command>
     {
         public async Task Handle(Command command, CancellationToken token)
         {
@@ -32,6 +34,7 @@ public static class CreateWidget
                 BusinessRuleValidationException.ThrowAlreadyExists<Widget>(name);
             }
         
+            log.LogInformation("Creating widget {id} {name} {price}", id, name, price);
             var widget = Widget.Create(id, name, price);
             await repository.Add(widget);
         }

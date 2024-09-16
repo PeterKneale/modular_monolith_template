@@ -2,15 +2,14 @@ using ModularMonolithModule.Application.Commands;
 using ModularMonolithModule.Application.Queries;
 using ModularMonolithModule.Domain;
 using ModularMonolithModule.IntegrationTests.Fixtures;
+using Xunit.Abstractions;
 using static ModularMonolithModule.IntegrationTests.TestDataGenerator;
 
 namespace ModularMonolithModule.IntegrationTests;
 
-[Collection(nameof(DbFixture))]
-public class WidgetTests
+[Collection(nameof(ServiceFixture))]
+public class WidgetTests(ServiceFixture service, ITestOutputHelper output) : BaseTest(service, output)
 {
-    private readonly ModularMonolithModule _module = new();
-
     [Fact]
     public async Task Can_create_then_get_by_id()
     {
@@ -18,9 +17,9 @@ public class WidgetTests
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await _module.SendCommand(new CreateWidget.Command(id, name, price));
+        await Module.SendCommand(new CreateWidget.Command(id, name, price));
         
-        var result = await _module.SendQuery(new GetWidget.Query(id));
+        var result = await Module.SendQuery(new GetWidget.Query(id));
         Assert.Equal(id, result.Id);
         Assert.Equal(name, result.Name);
         Assert.Equal(price, result.Price);
@@ -33,9 +32,9 @@ public class WidgetTests
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await _module.SendCommand(new CreateWidget.Command(id, name, price));
+        await Module.SendCommand(new CreateWidget.Command(id, name, price));
         
-        var results = await _module.SendQuery(new ListWidgets.Query());
+        var results = await Module.SendQuery(new ListWidgets.Query());
         Assert.Contains(id, results.Select(x => x.Id));
         var result = results.Single(x=>x.Id == id);
         Assert.Equal(id, result.Id);
@@ -50,8 +49,8 @@ public class WidgetTests
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await _module.SendCommand(new CreateWidget.Command(id, name, price));
-        var result1 = await _module.SendQuery(new GetWidgetName.Query(id));
+        await Module.SendCommand(new CreateWidget.Command(id, name, price));
+        var result1 = await Module.SendQuery(new GetWidgetName.Query(id));
         Assert.Equal(name, result1);
     }
 
@@ -63,9 +62,9 @@ public class WidgetTests
         var name2 = UniqueValidName;
         var price = ValidPrice;
 
-        await _module.SendCommand(new CreateWidget.Command(id, name1, price));
+        await Module.SendCommand(new CreateWidget.Command(id, name1, price));
         var ex = await Assert.ThrowsAsync<BusinessRuleValidationException>(() =>
-            _module.SendCommand(new CreateWidget.Command(id, name2, price)));
+            Module.SendCommand(new CreateWidget.Command(id, name2, price)));
         Assert.Contains($"already exists", ex.Message);
     }
 
@@ -77,9 +76,9 @@ public class WidgetTests
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await _module.SendCommand(new CreateWidget.Command(id1, name, price));
+        await Module.SendCommand(new CreateWidget.Command(id1, name, price));
         var ex = await Assert.ThrowsAsync<BusinessRuleValidationException>(() =>
-            _module.SendCommand(new CreateWidget.Command(id2, name, price)));
+            Module.SendCommand(new CreateWidget.Command(id2, name, price)));
         Assert.Contains($"already exists", ex.Message);
     }
 }

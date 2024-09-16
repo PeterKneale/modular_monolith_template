@@ -4,7 +4,7 @@
 SEARCH_DIR="."
 
 # Line number to replace
-LINE_NUMBER=18
+LINE_NUMBER=19
 
 # New content for the line
 NEW_CONTENT='<ProjectReference Include="..\..\Common\Common.csproj" />'
