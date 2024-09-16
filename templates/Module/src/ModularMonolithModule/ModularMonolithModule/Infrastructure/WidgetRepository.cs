@@ -1,4 +1,5 @@
 ﻿using ModularMonolithModule.Application;
+using Npgmq;
 
 namespace ModularMonolithModule.Infrastructure;
 
@@ -22,6 +23,11 @@ public class WidgetRepository(IDbConnectionFactory connections) : IWidgetReposit
     {
         var sql = $"INSERT INTO {WidgetsTable} ({IdColumn}, {NameColumn}, {PriceColumn}) VALUES (@Id, @Name, @Price)";
         var command = new CommandDefinition(sql, widget);
-        await connections.Create().ExecuteAsync(command);
+        var connection = await connections.OpenAsync();
+        await using var tx = await connection.BeginTransactionAsync();
+        await connection.ExecuteAsync(command);
+        var queue = new NpgmqClient(connection);
+        await queue.SendAsync(QueueName, widget);
+        await tx.CommitAsync();
     }
 }

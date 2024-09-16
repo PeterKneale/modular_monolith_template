@@ -2,19 +2,19 @@
 
 namespace ModularMonolithModule.Infrastructure.Migrations;
 
-[Migration(1)]
+[Migration(1, "Install pgmq extension")]
 public class Migration1 : Migration
 {
+    // Installs https://github.com/tembo-io/pgmq
+    private const string ExtensionName="pgmq";
+    
     public override void Up()
     {
-        Create.Table(WidgetsTable)
-            .WithColumn(IdColumn).AsGuid().PrimaryKey()
-            .WithColumn(NameColumn).AsString().NotNullable().Unique()
-            .WithColumn(PriceColumn).AsDecimal(18, 2).NotNullable();
+        Execute.Sql($"CREATE EXTENSION {ExtensionName};");
     }
 
     public override void Down()
     {
-        Delete.Table(WidgetsTable);
+        Execute.Sql($"DROP EXTENSION {ExtensionName};");
     }
 }
