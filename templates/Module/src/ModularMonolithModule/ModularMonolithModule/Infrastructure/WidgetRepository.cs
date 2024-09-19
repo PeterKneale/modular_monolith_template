@@ -1,4 +1,6 @@
-﻿using ModularMonolithModule.Application;
+﻿using Common.Integration;
+using ModularMonolithModule.Application;
+using ModularMonolithModule.Contracts;
 using Npgmq;
 
 namespace ModularMonolithModule.Infrastructure;
@@ -27,7 +29,9 @@ public class WidgetRepository(IDbConnectionFactory connections) : IWidgetReposit
         await using var tx = await connection.BeginTransactionAsync();
         await connection.ExecuteAsync(command);
         var queue = new NpgmqClient(connection);
-        await queue.SendAsync(QueueName, widget);
+        var evnt = new WidgetCreatedEvent { Id = widget.Id, Name = widget.Name, Price = widget.Price };
+        var envelope = IntegrationEventEnvelope.Create(evnt);
+        await queue.SendAsync(QueueName, envelope);
         await tx.CommitAsync();
     }
 }

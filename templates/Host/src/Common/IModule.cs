@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using MediatR;
+﻿using MediatR;
 
 namespace Common;
 

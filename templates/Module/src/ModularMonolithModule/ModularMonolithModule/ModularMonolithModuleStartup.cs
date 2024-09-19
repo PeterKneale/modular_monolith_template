@@ -1,17 +1,19 @@
 ﻿using System.Reflection;
 using Common;
+using Common.Configuration;
 using Common.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModularMonolithModule.Application;
 using ModularMonolithModule.Infrastructure;
+using Npgmq;
 
 namespace ModularMonolithModule;
 
-public static class ModularMonolithModuleStartup
+public class ModuleStartup(IConfiguration configuration, ILoggerProvider logs) : IModuleStartup
 {
-    public static async Task InitializeAsync(IConfiguration configuration, ILoggerProvider logs, bool resetDb)
+    public async Task InitializeAsync()
     {
         var connectionString = configuration.GetDbConnectionString(Schema);
         var assembly = Assembly.GetExecutingAssembly();
@@ -37,11 +39,27 @@ public static class ModularMonolithModuleStartup
             })
             // builder container
             .BuildServiceProvider();
+
+        var c = new NpgmqClient(connectionString);
+        await c.InitAsync();
+        await c.CreateQueueAsync(QueueName);
         
         CompositionRoot.SetProvider(provider);
 
-        DbMigrations.Apply(Schema, connectionString, assembly, reset: resetDb);
+        DbMigrations.Apply(Schema, connectionString, assembly, reset: false);
         
         DefaultTypeMap.MatchNamesWithUnderscores = true;
     }
+
+    public Task DestroyAsync()
+    {
+        var connectionString = configuration.GetDbConnectionString(Schema);
+        var assembly = Assembly.GetExecutingAssembly();
+
+        DbMigrations.Apply(Schema, connectionString, assembly, reset: false);
+
+        return Task.CompletedTask;
+    }
+
+
 }

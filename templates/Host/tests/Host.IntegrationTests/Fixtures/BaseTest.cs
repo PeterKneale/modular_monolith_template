@@ -1,6 +1,4 @@
-﻿using Host.IntegrationTests.Fixtures;
-
-namespace Host.IntegrationTests;
+﻿namespace Host.IntegrationTests.Fixtures;
 
 [Collection(nameof(ServiceFixtureCollection))]
 public class BaseTest

@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModularMonolithModule.Integ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModularMonolithModule.UnitTests", "Module\tests\ModularMonolithModule\ModularMonolithModule.UnitTests\ModularMonolithModule.UnitTests.csproj", "{7A7D2F6F-C329-4174-8EFC-E01E64F523BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModularMonolithModule.Contracts", "Module\src\ModularMonolithModule\ModularMonolithModule.Contracts\ModularMonolithModule.Contracts.csproj", "{15A882BF-A3D5-4E05-B70E-35F9EE6500CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,7 @@ Global
 		{81CADCB2-6C4B-4094-88A2-42891764BC35} = {38FDE5E0-7EF7-42F8-986E-4F2A7D9362D0}
 		{8201FAD3-BDB9-4C74-B9D8-D21EE52AA2CB} = {99309817-0587-4363-AFD7-9B84479F0612}
 		{7A7D2F6F-C329-4174-8EFC-E01E64F523BF} = {99309817-0587-4363-AFD7-9B84479F0612}
+		{15A882BF-A3D5-4E05-B70E-35F9EE6500CF} = {99309817-0587-4363-AFD7-9B84479F0612}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{30E946B7-949A-4CCE-BE68-85019FA09ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -80,5 +83,9 @@ Global
 		{7A7D2F6F-C329-4174-8EFC-E01E64F523BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A7D2F6F-C329-4174-8EFC-E01E64F523BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A7D2F6F-C329-4174-8EFC-E01E64F523BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15A882BF-A3D5-4E05-B70E-35F9EE6500CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15A882BF-A3D5-4E05-B70E-35F9EE6500CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15A882BF-A3D5-4E05-B70E-35F9EE6500CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15A882BF-A3D5-4E05-B70E-35F9EE6500CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -5,6 +5,7 @@ SEARCH_DIR="."
 
 # Line number to replace
 LINE_NUMBER=19
+LINE_NUMBER_2=10
 
 # New content for the line
 NEW_CONTENT='<ProjectReference Include="..\..\Common\Common.csproj" />'
@@ -29,8 +30,19 @@ find "$SEARCH_DIR" -type f -name "*.csproj" | while read -r FILE; do
         sed -i.bak "${LINE_NUMBER}s|.*|${ESCAPED_NEW_CONTENT}|" "$FILE"
         echo "Replaced line $LINE_NUMBER in: $FILE"
     else
-        echo "No match in line $LINE_NUMBER of: $FILE"
+        if sed -n "${LINE_NUMBER_2}p" "$FILE" | grep -q "Common"; then
+            echo "Match found in line $LINE_NUMBER_2 of: $FILE"
+
+            # Replace the specific line with new content
+            sed -i.bak "${LINE_NUMBER_2}s|.*|${ESCAPED_NEW_CONTENT}|" "$FILE"
+            echo "Replaced line $LINE_NUMBER_2 in: $FILE"
+        else
+            echo "No match in line $LINE_NUMBER_2 of: $FILE"
+        fi
     fi
+
+    # Check if the line contains "Common"
+   
 done
 
-echo "Conditional line replacement completed!"
+echo "DONE!"

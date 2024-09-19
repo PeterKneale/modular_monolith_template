@@ -2,8 +2,8 @@
 
 namespace ModularMonolithModule.Infrastructure.Migrations;
 
-[Migration(2)]
-public class Migration2 : Migration
+[Migration(1)]
+public class Migration1 : Migration
 {
     public override void Up()
     {

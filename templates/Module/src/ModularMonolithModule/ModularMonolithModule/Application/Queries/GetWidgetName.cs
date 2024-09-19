@@ -18,7 +18,7 @@ public static class GetWidgetName
         {
             var id = query.Id;
 
-            var sql = $"SELECT name FROM {WidgetsTable} WHERE {IdColumn}=@id";
+            const string sql = $"SELECT name FROM {WidgetsTable} WHERE {IdColumn}=@id";
             var command = new CommandDefinition(sql, new { id }, cancellationToken: token);
             var result = await connections.Create().ExecuteScalarAsync<string>(command);
             if (result == null)

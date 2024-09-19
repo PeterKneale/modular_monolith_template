@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Common.Migrations;
+namespace Common.Configuration;
 
 public static class DbConfigurationExtensions
 {

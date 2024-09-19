@@ -7,7 +7,7 @@ public static class GetWidget
     public class Response
     {
         public Guid Id { get; init; }
-        public string Name { get; init; }
+        public string Name { get; init; } = null!;
         public decimal Price { get; init; }
     }
 
@@ -25,7 +25,7 @@ public static class GetWidget
         {
             var id = query.Id;
 
-            var sql = $"SELECT * FROM {WidgetsTable} WHERE {IdColumn}=@id";
+            const string sql = $"SELECT * FROM {WidgetsTable} WHERE {IdColumn}=@id";
             var command = new CommandDefinition(sql, new { id }, cancellationToken: token);
             var result = await connections.Create().QuerySingleOrDefaultAsync<Response>(command);
             if (result == null)

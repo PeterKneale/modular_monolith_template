@@ -7,7 +7,7 @@ public static class ListWidgets
     public class Response
     {
         public Guid Id { get; init; }
-        public string Name { get; init; }
+        public string Name { get; init; } = null!;
         public decimal Price { get; init; }
     }
     
@@ -22,7 +22,7 @@ public static class ListWidgets
     {
         public async Task<IEnumerable<Response>> Handle(Query query, CancellationToken token)
         {
-            var sql = $"SELECT * FROM {WidgetsTable}";
+            const string sql = $"SELECT * FROM {WidgetsTable}";
             var command = new CommandDefinition(sql, cancellationToken: token);
             return await connections.Create().QueryAsync<Response>(command);
         }
