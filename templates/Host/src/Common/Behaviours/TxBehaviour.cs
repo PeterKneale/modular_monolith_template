@@ -9,12 +9,13 @@ public class TxBehaviour<TRequest, TResponse>(IDbConnectionFactory connections, 
 {
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        log.LogInformation("Begin transaction");
+        log.LogInformation("Beginning transaction");
         var connection = await connections.OpenAsync();
         var tx = await connection.BeginTransactionAsync(cancellationToken);
         try
         {
             var result = await next();
+            log.LogInformation("Committing transaction");
             await tx.CommitAsync(cancellationToken);
             return result;
         }

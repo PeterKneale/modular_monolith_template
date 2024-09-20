@@ -10,12 +10,12 @@ using ModularMonolithModule.Infrastructure;
 
 namespace ModularMonolithModule;
 
-public class ModularMonolithModuleStartup : IModuleStartup
+public class ModularMonolithModuleModuleStartup : IModuleStartup
 {
     private readonly IConfiguration _configuration;
     private readonly ILoggerProvider _logs;
 
-    public ModularMonolithModuleStartup(IConfiguration configuration, ILoggerProvider logs)
+    public ModularMonolithModuleModuleStartup(IConfiguration configuration, ILoggerProvider logs)
     {
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logs);
@@ -38,12 +38,16 @@ public class ModularMonolithModuleStartup : IModuleStartup
         var provider = new ServiceCollection()
             .AddCommon()
             // entrypoint
-            .AddSingleton<IModularMonolithModule, ModularMonolithModule>()
+            .AddSingleton<IModularMonolithModule, ModularMonolithModuleModule>()
             // application
             .AddMediatR(c => c.RegisterServicesFromAssemblies(assemblies))
             .AddValidatorsFromAssemblies(assemblies)
             // infrastructure
-            .AddScoped<IDbConnectionFactory, DbConnectionFactory>(_ => new DbConnectionFactory(connectionString))
+            .AddScoped<IDbConnectionFactory, DbConnectionFactory>(serviceProvider =>
+            {
+                var log = serviceProvider.GetRequiredService<ILogger<DbConnectionFactory>>();
+                return new DbConnectionFactory(connectionString, log);
+            })
             .AddScoped<IWidgetRepository, WidgetRepository>()
             // logging
             .AddLogging(c => { c.AddProvider(_logs).AddSimpleConsole(c => c.SingleLine = true); })

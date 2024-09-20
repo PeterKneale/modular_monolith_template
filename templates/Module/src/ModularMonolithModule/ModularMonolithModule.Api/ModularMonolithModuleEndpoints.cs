@@ -6,7 +6,7 @@ namespace ModularMonolithModule.Api;
 
 public static class ModularMonolithModuleEndpoints
 {
-    private static readonly ModularMonolithModule Module = new();
+    private static readonly ModularMonolithModuleModule ModuleModule = new();
     
     public static void UseModuleEndpoints(this WebApplication app)
     {
@@ -14,7 +14,7 @@ public static class ModularMonolithModuleEndpoints
         var path = $"/{root}/widgets";
         app.MapGet(path, async (CancellationToken token) =>
             {
-                var results = await Module.SendQuery(new ListWidgets.Query(),token);
+                var results = await ModuleModule.SendQuery(new ListWidgets.Query(),token);
                 return Results.Ok(results);
             })
             .WithName($"{root} - GetWidgets ")

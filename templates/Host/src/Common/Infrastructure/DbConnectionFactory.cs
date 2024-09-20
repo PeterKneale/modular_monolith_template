@@ -1,6 +1,8 @@
-﻿namespace Common.Infrastructure;
+﻿using Microsoft.Extensions.Logging;
 
-public class DbConnectionFactory(string connectionString) : IDbConnectionFactory, IDisposable, IAsyncDisposable
+namespace Common.Infrastructure;
+
+public class DbConnectionFactory(string connectionString, ILogger<DbConnectionFactory> log) : IDbConnectionFactory, IDisposable, IAsyncDisposable
 {
     private NpgsqlConnection? _connection;
 
@@ -8,8 +10,11 @@ public class DbConnectionFactory(string connectionString) : IDbConnectionFactory
     {
         if (_connection is not null)
         {
+            log.LogInformation("Reusing open connection");
             return _connection;
         }
+        
+        log.LogInformation("Opening new connection");
         _connection = new NpgsqlConnection(connectionString);
         await _connection.OpenAsync();
         return _connection;

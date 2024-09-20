@@ -12,7 +12,7 @@ public class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logs) : IPi
         var name = GetName();
         var body = JsonConvert.SerializeObject(request);
 
-        logs.LogDebug("Executing: {Name} - {Body}", name, body);
+        logs.LogInformation("Executing: {Name} - {Body}", name, body);
 
         TResponse result;
         try

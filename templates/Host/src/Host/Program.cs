@@ -8,18 +8,23 @@ builder.Services.AddLogging(x => x.AddSimpleConsole(opt => opt.SingleLine = true
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var module = typeof(ModularMonolithModule.ModularMonolithModule).Assembly;
+var module = typeof(ModularMonolithModule.ModularMonolithModuleModule).Assembly;
 
 // modules
-builder.Services.AddSingleton<IModularMonolithModule, ModularMonolithModule.ModularMonolithModule>();
-builder.Services.AddSingleton<IModule, ModularMonolithModule.ModularMonolithModule>();
-builder.Services.AddSingleton<ModularMonolithModuleStartup>();
+builder.Services.AddSingleton<IModularMonolithModule, ModularMonolithModule.ModularMonolithModuleModule>();
+builder.Services.AddSingleton<IModule, ModularMonolithModule.ModularMonolithModuleModule>();
+builder.Services.AddSingleton<ModularMonolithModuleModuleStartup>();
 
 // ui
 builder.Services
     .AddRazorPages()
     .AddApplicationPart(module)
     .AddRazorRuntimeCompilation(c => c.FileProviders.Add(new EmbeddedFileProvider(module)));
+
+builder.Services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
+{
+    options.FileProviders.Add(new EmbeddedFileProvider(module));
+});
 
 // queue
 builder.Services
@@ -47,6 +52,6 @@ app.MapGet("/health/ready", () => "ready");
 app.MapRazorPages();
 
 // module endpoints
-app.Services.GetRequiredService<ModularMonolithModuleStartup>().Startup();
+app.Services.GetRequiredService<ModularMonolithModuleModuleStartup>().Startup();
 
 app.Run();

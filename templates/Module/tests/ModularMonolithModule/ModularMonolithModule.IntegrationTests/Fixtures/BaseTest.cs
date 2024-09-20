@@ -9,10 +9,10 @@ public class BaseTest
     {
         Service = service;
         service.OutputHelper = output;
-        Module = new ModularMonolithModule();
+        ModuleModule = new ModularMonolithModuleModule();
     }
 
     protected ServiceFixture Service { get; init; }
     
-    protected ModularMonolithModule Module { get; init; }
+    protected ModularMonolithModuleModule ModuleModule { get; init; }
 }
