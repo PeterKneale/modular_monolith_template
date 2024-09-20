@@ -36,6 +36,9 @@ jobs:
         dotnet-version: 8.0.x
     
     - name: Restore, Build, and Test
+      env:
+        DOTNET_CLI_TELEMETRY_OPTOUT: true
+        DB_HOST: postgres
       run: |
         cd templates
         dotnet restore
