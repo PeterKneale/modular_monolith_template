@@ -1,5 +1,5 @@
 ﻿using MediatR;
 
-namespace Common.Integration;
+namespace Common.Infrastructure.Integration;
 
 public abstract class IntegrationEvent : INotification;

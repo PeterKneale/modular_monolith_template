@@ -7,26 +7,44 @@ using Xunit.Abstractions;
 
 namespace ModularMonolithModule.IntegrationTests.Fixtures;
 
-public class ServiceFixture : IAsyncLifetime,ITestOutputHelperAccessor
+public class ServiceFixture : ITestOutputHelperAccessor, IDisposable, IAsyncDisposable
 {
-    public async Task InitializeAsync()
+    private readonly ServiceProvider _provider;
+    private CommonModuleStart _common;
+    private readonly IModuleStartup _module;
+
+    public ServiceFixture()
     {
         var configuration = new ConfigurationBuilder()
             .AddEnvironmentVariables()
             .Build();
-        
-        var services = new ServiceCollection()
+
+        _provider = new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration)
             .AddLogging(builder => builder.AddXUnit(this))
-            .AddSingleton<IModuleStartup,ModuleStartup>()
+            .AddSingleton<IModuleStartup, ModuleStartup>()
             .BuildServiceProvider();
 
-        var startup = services.GetRequiredService<IModuleStartup>();
-        await startup.DestroyAsync(); 
-        await startup.InitializeAsync();
-    }
+        _common = new CommonModuleStart(configuration);
+        _common.Startup();
 
-    public Task DisposeAsync() => Task.CompletedTask;
+        _module = _provider.GetRequiredService<IModuleStartup>();
+        _module.Startup();
+    }
     
     public ITestOutputHelper? OutputHelper { get; set; }
+
+    public void Dispose()
+    {
+        _provider.Dispose();
+        _common.Destroy();
+        _module.Destroy();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _provider.DisposeAsync();
+        _common.Destroy();
+        _module.Destroy();
+    }
 }

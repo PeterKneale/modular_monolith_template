@@ -12,9 +12,9 @@ public static class ModularMonolithModuleEndpoints
     {
         var root = ModularMonolithModuleApiAssemblyInfo.Assembly.GetName().Name;
         var path = $"/{root}/widgets";
-        app.MapGet(path, () =>
+        app.MapGet(path, (CancellationToken token) =>
             {
-                var results = Module.SendQuery(new ListWidgets.Query());
+                var results = Module.SendQuery(new ListWidgets.Query(),token);
                 return Results.Ok(results);
             })
             .WithName($"{root} - GetWidgets ")

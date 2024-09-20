@@ -1,21 +1,32 @@
 ﻿using System.Reflection;
 using Common;
-using Common.Configuration;
-using Common.Migrations;
+using Common.Infrastructure.Configuration;
+using Common.Infrastructure.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModularMonolithModule.Application;
 using ModularMonolithModule.Infrastructure;
-using Npgmq;
 
 namespace ModularMonolithModule;
 
-public class ModuleStartup(IConfiguration configuration, ILoggerProvider logs) : IModuleStartup
+public class ModuleStartup : IModuleStartup
 {
-    public async Task InitializeAsync()
+    private readonly IConfiguration _configuration;
+    private readonly ILoggerProvider _logs;
+
+    public ModuleStartup(IConfiguration configuration, ILoggerProvider logs)
     {
-        var connectionString = configuration.GetDbConnectionString(Schema);
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(logs);
+
+        _configuration = configuration;
+        _logs = logs;
+    }
+
+    public void Startup()
+    {
+        var connectionString = _configuration.GetDbConnectionString(Schema);
         var assembly = Assembly.GetExecutingAssembly();
 
         var assemblies = new[]
@@ -23,43 +34,34 @@ public class ModuleStartup(IConfiguration configuration, ILoggerProvider logs) :
             ModularMonolithModuleAssemblyInfo.Assembly,
             CommonAssemblyInfo.Assembly
         };
-        
+
         var provider = new ServiceCollection()
             .AddCommon()
+            // entrypoint
+            .AddSingleton<IModularMonolithModule, ModularMonolithModule>()
             // application
             .AddMediatR(c => c.RegisterServicesFromAssemblies(assemblies))
             .AddValidatorsFromAssemblies(assemblies)
             // infrastructure
-            .AddScoped<IDbConnectionFactory,DbConnectionFactory>(c=>new DbConnectionFactory(connectionString))
+            .AddScoped<IDbConnectionFactory, DbConnectionFactory>(_ => new DbConnectionFactory(connectionString))
             .AddScoped<IWidgetRepository, WidgetRepository>()
             // logging
-            .AddLogging(c =>
-            {
-                c.AddProvider(logs);
-            })
+            .AddLogging(c => { c.AddProvider(_logs).AddSimpleConsole(c => c.SingleLine = true); })
             // builder container
             .BuildServiceProvider();
 
-        var c = new NpgmqClient(connectionString);
-        await c.InitAsync();
-        await c.CreateQueueAsync(QueueName);
-        
         CompositionRoot.SetProvider(provider);
 
         DbMigrations.Apply(Schema, connectionString, assembly, reset: false);
-        
+
         DefaultTypeMap.MatchNamesWithUnderscores = true;
     }
 
-    public Task DestroyAsync()
+    public void Destroy()
     {
-        var connectionString = configuration.GetDbConnectionString(Schema);
+        var connectionString = _configuration.GetDbConnectionString(Schema);
         var assembly = Assembly.GetExecutingAssembly();
 
         DbMigrations.Apply(Schema, connectionString, assembly, reset: false);
-
-        return Task.CompletedTask;
     }
-
-
 }

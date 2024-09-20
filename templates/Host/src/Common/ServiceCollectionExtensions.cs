@@ -1,4 +1,5 @@
 ﻿using Common.Behaviours;
+using Common.Infrastructure.Integration;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+        services.AddScoped<IntegrationEventRepository>();
         return services;
     }
 }

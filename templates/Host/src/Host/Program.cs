@@ -2,7 +2,7 @@ using Host.Infrastructure.Integration;
 using Host.Infrastructure.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddLogging(x => x.AddSimpleConsole(opt => opt.SingleLine = true));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -23,6 +23,7 @@ builder.Services
 builder.Services
     .AddHostedService<QueueJob>()
     .AddSingleton<QueueProcessor>()
+    .AddSingleton<QueueRepository>()
     .AddSingleton<EventPublisher>();
 
 var app = builder.Build();
@@ -31,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseStaticFiles();
 app.UseRouting();
 // app.UseAuthentication();

@@ -17,9 +17,9 @@ public class WidgetTests(ServiceFixture service, ITestOutputHelper output) : Bas
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await Module.SendCommand(new CreateWidget.Command(id, name, price));
+        await Module.SendCommand(new CreateWidget.Command(id, name, price), CancellationToken.None);
         
-        var result = await Module.SendQuery(new GetWidget.Query(id));
+        var result = await Module.SendQuery(new GetWidget.Query(id), CancellationToken.None);
         Assert.Equal(id, result.Id);
         Assert.Equal(name, result.Name);
         Assert.Equal(price, result.Price);
@@ -32,9 +32,9 @@ public class WidgetTests(ServiceFixture service, ITestOutputHelper output) : Bas
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await Module.SendCommand(new CreateWidget.Command(id, name, price));
+        await Module.SendCommand(new CreateWidget.Command(id, name, price), CancellationToken.None);
         
-        var results = await Module.SendQuery(new ListWidgets.Query());
+        var results = await Module.SendQuery(new ListWidgets.Query(), CancellationToken.None);
         Assert.Contains(id, results.Select(x => x.Id));
         var result = results.Single(x=>x.Id == id);
         Assert.Equal(id, result.Id);
@@ -49,8 +49,8 @@ public class WidgetTests(ServiceFixture service, ITestOutputHelper output) : Bas
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await Module.SendCommand(new CreateWidget.Command(id, name, price));
-        var result1 = await Module.SendQuery(new GetWidgetName.Query(id));
+        await Module.SendCommand(new CreateWidget.Command(id, name, price), CancellationToken.None);
+        var result1 = await Module.SendQuery(new GetWidgetName.Query(id), CancellationToken.None);
         Assert.Equal(name, result1);
     }
 
@@ -62,9 +62,9 @@ public class WidgetTests(ServiceFixture service, ITestOutputHelper output) : Bas
         var name2 = UniqueValidName;
         var price = ValidPrice;
 
-        await Module.SendCommand(new CreateWidget.Command(id, name1, price));
+        await Module.SendCommand(new CreateWidget.Command(id, name1, price), CancellationToken.None);
         var ex = await Assert.ThrowsAsync<BusinessRuleValidationException>(() =>
-            Module.SendCommand(new CreateWidget.Command(id, name2, price)));
+            Module.SendCommand(new CreateWidget.Command(id, name2, price), CancellationToken.None));
         Assert.Contains($"already exists", ex.Message);
     }
 
@@ -76,9 +76,9 @@ public class WidgetTests(ServiceFixture service, ITestOutputHelper output) : Bas
         var name = UniqueValidName;
         var price = ValidPrice;
 
-        await Module.SendCommand(new CreateWidget.Command(id1, name, price));
+        await Module.SendCommand(new CreateWidget.Command(id1, name, price), CancellationToken.None);
         var ex = await Assert.ThrowsAsync<BusinessRuleValidationException>(() =>
-            Module.SendCommand(new CreateWidget.Command(id2, name, price)));
+            Module.SendCommand(new CreateWidget.Command(id2, name, price), CancellationToken.None));
         Assert.Contains($"already exists", ex.Message);
     }
 }

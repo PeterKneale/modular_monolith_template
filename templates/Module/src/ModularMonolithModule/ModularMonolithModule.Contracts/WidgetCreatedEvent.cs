@@ -1,4 +1,4 @@
-﻿using Common.Integration;
+﻿using Common.Infrastructure.Integration;
 
 namespace ModularMonolithModule.Contracts;
 

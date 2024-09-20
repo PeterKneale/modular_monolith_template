@@ -7,7 +7,7 @@ public class WidgetCreatedHandler(ILogger<WidgetCreatedEvent> log) : INotificati
 {
     public Task Handle(WidgetCreatedEvent notification, CancellationToken cancellationToken)
     {
-        log.LogInformation("Widget created: {WidgetId}", notification.Name);
+        log.LogInformation("Handling Widget created: {WidgetId}", notification.Name);
         return Task.CompletedTask;
     }
 }

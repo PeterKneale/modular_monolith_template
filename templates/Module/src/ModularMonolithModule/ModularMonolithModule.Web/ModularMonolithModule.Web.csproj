@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Shared\" />
+      <ProjectReference Include="..\ModularMonolithModule\ModularMonolithModule.csproj" />
     </ItemGroup>
 
 </Project>

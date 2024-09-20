@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
 
-namespace Common.Integration;
+namespace Common.Infrastructure.Integration;
 
-public class IntegrationEventEnvelope(string type, string json)
+public class IntegrationEventEnvelope(Guid id, string type, string json)
 {
+    public Guid Id { get; init; } = id;
     public string Type { get; init; } = type;
     public string Json { get; init; } = json;
 
@@ -15,8 +16,9 @@ public class IntegrationEventEnvelope(string type, string json)
         {
             throw new Exception($"Cannot get full name for type {typeof(T).Name}");
         }
+
         var json = JsonConvert.SerializeObject(o);
-        return new IntegrationEventEnvelope(name, json);
+        return new IntegrationEventEnvelope(Guid.NewGuid(), name, json);
     }
 
     public INotification GetMessage()
@@ -31,6 +33,7 @@ public class IntegrationEventEnvelope(string type, string json)
         {
             throw new Exception($"Cannot deserialize {Json} to {Type}");
         }
+
         return notification;
     }
 }

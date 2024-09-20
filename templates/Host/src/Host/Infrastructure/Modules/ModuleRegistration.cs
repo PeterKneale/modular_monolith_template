@@ -7,9 +7,9 @@ public static class ModuleRegistration
     public static void AddModules(this IServiceCollection services)
     {
         Console.WriteLine("Loading Modules");
-        
+
         var assemblies = GetAssemblyNames().ToList();
-        
+
         foreach (var type in GetModules(assemblies))
         {
             Console.WriteLine($"Registering Module {type.Assembly}");
@@ -29,8 +29,9 @@ public static class ModuleRegistration
         var modules = app.Services.GetRequiredService<IEnumerable<IModuleStartup>>();
         foreach (var module in modules)
         {
-            Console.WriteLine($"Starting {module.GetType().Assembly}");
-            module.InitializeAsync().Wait();
+            Console.WriteLine($"Starting {module.GetType().Assembly}...");
+            module.Startup();
+            Console.WriteLine($"Started {module.GetType().Assembly}");
         }
     }
 
@@ -74,29 +75,42 @@ public static class ModuleRegistration
     // Get the single type that implements the IModule interface from an assembly
     private static IEnumerable<Type> GetModules(IEnumerable<string> files)
     {
+        var list = new List<Type>();
         foreach (var file in files)
         {
-            var assembly = Load(file);
-            var modules = assembly.GetTypes().Where(x => x.IsClass && x.IsAssignableTo(typeof(IModule)));
-            foreach (var module in modules)
+            try
             {
-                yield return module;
+                var assembly = Load(file);
+                list.AddRange(assembly.GetTypes().Where(x => x.IsClass && x.IsAssignableTo(typeof(IModule)))
+                    .ToList());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Cannot load assembly {file}" + e.Message);
             }
         }
+
+        return list;
     }
 
     // Get the single type that implements the IModule interface from an assembly
     private static IEnumerable<Type> GetModuleStarts(IEnumerable<string> files)
     {
+        var list = new List<Type>();
         foreach (var file in files)
         {
-            var assembly = Load(file);
-            var starts = assembly.GetTypes().Where(x =>x.IsClass && x.IsAssignableTo(typeof(IModuleStartup)));
-            foreach (var start in starts)
+            try
             {
-                yield return start;
+                var assembly = Load(file);
+                list.AddRange(assembly.GetTypes().Where(x => x.IsClass && x.IsAssignableTo(typeof(IModuleStartup))));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Cannot load {file}" + e.Message);
             }
         }
+
+        return list;
     }
 
     private static IEnumerable<MethodInfo> GetApiModules(IEnumerable<string> list)
@@ -133,12 +147,15 @@ public static class ModuleRegistration
 
 
     private static IEnumerable<string>? _assemblyNames;
-    
+
     private static IEnumerable<string> GetAssemblyNames()
     {
         if (_assemblyNames != null) return _assemblyNames;
-        _assemblyNames = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")
-            .Where(x => !x.Contains("Microsoft") && !x.Contains("System")).ToList();
+        var ignore = new[] { "microsoft", "system", "xunit" };
+        var list = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll").ToList();
+        _assemblyNames = list
+            .Where(item => !ignore.Any(x => item.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
+            .ToList();
         return _assemblyNames;
     }
 

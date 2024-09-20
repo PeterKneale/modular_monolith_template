@@ -2,4 +2,4 @@
 
 namespace ModularMonolithModule;
 
-public class ModularMonolithModule() : BaseModule(CompositionRoot.BeginLifetimeScope), IModule;
+public class ModularMonolithModule() : BaseModule(CompositionRoot.BeginLifetimeScope), IModularMonolithModule;

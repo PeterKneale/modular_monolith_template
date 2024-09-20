@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
 
-namespace Common.Migrations;
+namespace Common.Infrastructure.Migrations;
 
 public static class DbMigrations
 {

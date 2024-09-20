@@ -24,7 +24,8 @@ public static class ListWidgets
         {
             const string sql = $"SELECT * FROM {WidgetsTable}";
             var command = new CommandDefinition(sql, cancellationToken: token);
-            return await connections.Create().QueryAsync<Response>(command);
+            var connection = await connections.OpenAsync();
+            return await connection.QueryAsync<Response>(command);
         }
     }
 }

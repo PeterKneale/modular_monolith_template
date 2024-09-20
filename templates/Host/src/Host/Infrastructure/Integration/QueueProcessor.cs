@@ -1,47 +1,61 @@
-﻿using Common.Configuration;
-using Common.Integration;
-using Common.Migrations;
-using Npgmq;
+﻿using Polly.Retry;
 
 namespace Host.Infrastructure.Integration;
 
-public class QueueProcessor(IConfiguration configuration, EventPublisher publisher, ILogger<QueueProcessor> log)
+public class QueueProcessor
 {
-    const string QueueName = "widgets_queue";
-    
+    private readonly QueueRepository _queue;
+    private readonly EventPublisher _publisher;
+    private readonly ILogger<QueueProcessor> _log;
+    private readonly AsyncRetryPolicy _policy;
+
+    public QueueProcessor(QueueRepository queue, EventPublisher publisher, ILogger<QueueProcessor> log)
+    {
+        _queue = queue;
+        _publisher = publisher;
+        _log = log;
+        _policy = RetryHelper.BuildRetryPolicy(_log);
+    }
+
     public async Task ProcessQueueAsync(CancellationToken stoppingToken)
     {
-        var connectionString = configuration.GetDbConnectionString("pgmq");
-        var queue = new NpgmqClient(connectionString);
-        await queue.InitAsync();
-        while (!await queue.QueueExistsAsync(QueueName) && !stoppingToken.IsCancellationRequested)
-        {
-            log.LogInformation("Waiting for queue {Name} to be created", QueueName);
-            await Task.Delay(1000, stoppingToken);
-        }
+        _log.LogInformation("Queue processor started");
 
+        // delay on start
+        await Task.Delay(3000, stoppingToken);
+        
         while (!stoppingToken.IsCancellationRequested)
         {
-            var envelope = await queue.ReadAsync<IntegrationEventEnvelope>(QueueName);
-            if (envelope is not null)
+            await _policy.ExecuteAsync(async (cancellationToken) =>
             {
-                log.LogInformation("Handling message {Message}", envelope.MsgId);
-                await publisher.Publish(envelope.Message!);
+                await Process(cancellationToken);
+            }, stoppingToken);
+        }
 
-                var success = await queue.ArchiveAsync(QueueName, envelope.MsgId);
-                if (success)
-                {
-                    log.LogInformation("Archived message {Message}", envelope.MsgId);
-                }
-                else
-                {
-                    log.LogError("Failed to archive message {Message}", envelope.MsgId);
-                }
-            }
-            else
+        _log.LogInformation("Queue processor stopped");
+    }
+
+    private async Task Process(CancellationToken cancellationToken)
+    {
+        var envelope = await _queue.GetNextAsync(cancellationToken);
+
+        if (envelope is null)
+        {
+            await Task.Delay(1000, cancellationToken);
+            return;
+        }
+
+        try
+        {
+            await _policy.ExecuteAsync(async () =>
             {
-                await Task.Delay(1000, stoppingToken);
-            }
+                await _publisher.Publish(envelope, cancellationToken);
+                await _queue.DeleteAsync(envelope.Id, cancellationToken);
+            });
+        }
+        catch (Exception e)
+        {
+            _log.LogError(e, "Error processing message {Id}", envelope.Id);
         }
     }
 }

@@ -4,7 +4,7 @@
 SEARCH_DIR="."
 
 # Line number to replace
-LINE_NUMBER=19
+LINE_NUMBER=16
 LINE_NUMBER_2=10
 
 # New content for the line

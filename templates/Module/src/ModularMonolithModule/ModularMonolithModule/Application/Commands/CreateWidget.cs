@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Common.Infrastructure.Integration;
+using Microsoft.Extensions.Logging;
+using ModularMonolithModule.Contracts;
 
 namespace ModularMonolithModule.Application.Commands;
 
@@ -16,27 +18,28 @@ public static class CreateWidget
         }
     }
 
-    public class Handler(IWidgetRepository repository, ILogger<Handler> log) : IRequestHandler<Command>
+    public class Handler(IWidgetRepository widgets, IntegrationEventRepository events, ILogger<Handler> log) : IRequestHandler<Command>
     {
         public async Task Handle(Command command, CancellationToken token)
         {
             var id = command.Id;
             var name = command.Name;
             var price = command.Price;
-            
-            if(await repository.Exists(id))
+
+            if (await widgets.Exists(id))
             {
                 BusinessRuleValidationException.ThrowAlreadyExists<Widget>(id);
             }
-        
-            if(await repository.Exists(name))
+
+            if (await widgets.Exists(name))
             {
                 BusinessRuleValidationException.ThrowAlreadyExists<Widget>(name);
             }
-        
+
             log.LogInformation("Creating widget {id} {name} {price}", id, name, price);
             var widget = Widget.Create(id, name, price);
-            await repository.Add(widget);
+            await widgets.Add(widget);
+            await events.SaveAsync(new WidgetCreatedEvent { Id = widget.Id, Name = widget.Name, Price = widget.Price }, token);
         }
     }
 }

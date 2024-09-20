@@ -1,11 +1,14 @@
 ﻿using Common;
-using Common.Integration;
+using Common.Infrastructure.Integration;
+using Polly.Retry;
 
 namespace Host.Infrastructure.Integration;
 
 public class EventPublisher(ILogger<EventPublisher> log, IEnumerable<IModule> modules)
 {
-    public async Task Publish(IntegrationEventEnvelope envelope)
+    private readonly AsyncRetryPolicy _policy = RetryHelper.BuildRetryPolicy(log);
+
+    public async Task Publish(IntegrationEventEnvelope envelope, CancellationToken token)
     {
         var type = envelope.Type;
         var json = envelope.Json;
@@ -15,11 +18,11 @@ public class EventPublisher(ILogger<EventPublisher> log, IEnumerable<IModule> mo
 
         if (modules.Any())
         {
-            foreach(var module in modules)
+            foreach (var module in modules)
             {
                 log.LogInformation("Publishing message {Type} to {Module}", type, module.GetType().Name);
-                await module.PublishNotification(message);
-            }   
+                await module.PublishNotification(message, token);
+            }
         }
         else
         {

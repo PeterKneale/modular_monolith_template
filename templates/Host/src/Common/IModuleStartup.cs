@@ -2,6 +2,6 @@
 
 public interface IModuleStartup
 {
-    Task DestroyAsync();
-    Task InitializeAsync();
+    void Destroy();
+    void Startup();
 }

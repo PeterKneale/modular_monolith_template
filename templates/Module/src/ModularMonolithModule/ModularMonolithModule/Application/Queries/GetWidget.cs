@@ -27,7 +27,8 @@ public static class GetWidget
 
             const string sql = $"SELECT * FROM {WidgetsTable} WHERE {IdColumn}=@id";
             var command = new CommandDefinition(sql, new { id }, cancellationToken: token);
-            var result = await connections.Create().QuerySingleOrDefaultAsync<Response>(command);
+            var connection = await connections.OpenAsync();
+            var result = await connection.QuerySingleOrDefaultAsync<Response>(command);
             if (result == null)
             {
                 throw new BusinessRuleValidationException($"Widget with id {id} not found");
