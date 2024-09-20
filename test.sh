@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 echo "🚀 Uninstalling the template"
-dotnet new uninstall .
+dotnet new uninstall . || echo "⚠️ Uninstall failed, continuing..."
 echo "🚀 Installing the template"
 dotnet new install .
 
