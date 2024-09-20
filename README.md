@@ -4,8 +4,9 @@ This repo consists of two dotnet templates
 
 - One to create a solution with a host project
   - Web (Setup to load multiple of the below modules)
-  - A single layout page
-  - Tabler.io css
+    - A single layout page
+    - Tabler.io css
+  - Integration tests
 
 - One to create modules hosted by the above
   - The module consists of
@@ -14,6 +15,8 @@ This repo consists of two dotnet templates
     - Dapper
     - Api (Minimal API's)
     - Web (Razor Pages)
+    - Unit tests
+    - Integration tests
 
 ## Installing
 
