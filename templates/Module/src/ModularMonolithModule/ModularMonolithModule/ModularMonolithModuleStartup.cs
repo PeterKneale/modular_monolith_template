@@ -10,12 +10,12 @@ using ModularMonolithModule.Infrastructure;
 
 namespace ModularMonolithModule;
 
-public class ModuleStartup : IModuleStartup
+public class ModularMonolithModuleStartup : IModuleStartup
 {
     private readonly IConfiguration _configuration;
     private readonly ILoggerProvider _logs;
 
-    public ModuleStartup(IConfiguration configuration, ILoggerProvider logs)
+    public ModularMonolithModuleStartup(IConfiguration configuration, ILoggerProvider logs)
     {
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logs);

@@ -8,13 +8,13 @@ public static class ModularMonolithModuleEndpoints
 {
     private static readonly ModularMonolithModule Module = new();
     
-    public static void RegisterEndpoints(this WebApplication app)
+    public static void UseModuleEndpoints(this WebApplication app)
     {
         var root = ModularMonolithModuleApiAssemblyInfo.Assembly.GetName().Name;
         var path = $"/{root}/widgets";
-        app.MapGet(path, (CancellationToken token) =>
+        app.MapGet(path, async (CancellationToken token) =>
             {
-                var results = Module.SendQuery(new ListWidgets.Query(),token);
+                var results = await Module.SendQuery(new ListWidgets.Query(),token);
                 return Results.Ok(results);
             })
             .WithName($"{root} - GetWidgets ")

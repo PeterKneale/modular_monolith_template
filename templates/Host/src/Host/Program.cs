@@ -1,23 +1,25 @@
+using Common;
 using Host.Infrastructure.Integration;
-using Host.Infrastructure.Modules;
+using ModularMonolithModule;
+using ModularMonolithModule.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddLogging(x => x.AddSimpleConsole(opt => opt.SingleLine = true));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var module = typeof(ModularMonolithModule.ModularMonolithModule).Assembly;
+
 // modules
-builder.Services.AddModules();
+builder.Services.AddSingleton<IModularMonolithModule, ModularMonolithModule.ModularMonolithModule>();
+builder.Services.AddSingleton<IModule, ModularMonolithModule.ModularMonolithModule>();
+builder.Services.AddSingleton<ModularMonolithModuleStartup>();
 
 // ui
 builder.Services
     .AddRazorPages()
-    .AddRazorRuntimeCompilation()
-    .AddWebModules();
-
-// web
-builder.Services
-    .AddWebModulesFiles();
+    .AddApplicationPart(module)
+    .AddRazorRuntimeCompilation(c => c.FileProviders.Add(new EmbeddedFileProvider(module)));
 
 // queue
 builder.Services
@@ -37,10 +39,14 @@ app.UseStaticFiles();
 app.UseRouting();
 // app.UseAuthentication();
 // app.UseAuthorization();
-app.UseApiModules();
+app.UseModuleEndpoints();
+
 app.MapGet("/meta/name", () => Assembly.GetExecutingAssembly().GetName());
 app.MapGet("/health/alive", () => "alive");
 app.MapGet("/health/ready", () => "ready");
 app.MapRazorPages();
-app.StartModules();
+
+// module endpoints
+app.Services.GetRequiredService<ModularMonolithModuleStartup>().Startup();
+
 app.Run();

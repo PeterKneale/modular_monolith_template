@@ -22,7 +22,7 @@ public class ServiceFixture : ITestOutputHelperAccessor, IDisposable, IAsyncDisp
         _provider = new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration)
             .AddLogging(builder => builder.AddXUnit(this))
-            .AddSingleton<IModuleStartup, ModuleStartup>()
+            .AddSingleton<IModuleStartup, ModularMonolithModuleStartup>()
             .BuildServiceProvider();
 
         _common = new CommonModuleStart(configuration);

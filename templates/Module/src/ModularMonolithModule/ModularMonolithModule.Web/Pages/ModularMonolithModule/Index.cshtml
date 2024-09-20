@@ -1,36 +1,49 @@
 ﻿@page
 @model ModularMonolithModule.IndexModel
-<div class="container-xl">
-    <div class="row">
-        <div class="col-12">
-            <h1>ModularMonolithModule</h1>
-        </div>
+
+<div class="row">
+    <div class="col-12">
+        <h1>ModularMonolithModule</h1>
     </div>
-    <div class="row row-deck row-cards">
-        <div class="col-4">
-            <div class="card">
-                <div class="card-body">
-                    @foreach(var item in Model.Widgets)
-                    {
-                        <div>@item.Name (@item.Price.ToString("C")</div>
-                    }
+</div>
+<div class="row row-deck row-cards">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Widgets</h3>
+                <div class="card-actions">
+                    <a asp-page="Create" class="btn btn-primary">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
+                        </svg>
+                        Add new
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="card-body" style="height: 10rem"></div>
+            <div class="list-group list-group-flush">
+                @foreach (var item in Model.Widgets)
+                {
+                    <a href="#" class="list-group-item list-group-item-action">
+                        @item.Name (@item.Price.ToString("C"))
+                    </a>
+                }
             </div>
         </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="card-body" style="height: 10rem"></div>
-            </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body" style="height: 10rem"></div>
         </div>
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body" style="height: 10rem"></div>
-            </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body" style="height: 10rem"></div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body" style="height: 10rem"></div>
         </div>
     </div>
 </div>
