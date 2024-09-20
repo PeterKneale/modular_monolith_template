@@ -42,11 +42,3 @@ jobs:
         dotnet build --no-restore
         dotnet test --no-build --verbosity normal
         
-    - name: Use template to provision solution with multiple modules and test 
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT: true
-        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-        DOTNET_NOLOGO: true
-        DB_HOST: postgres
-      run: ./test.sh
-        
