@@ -38,4 +38,4 @@ dotnet add ./$OUTPUT_FOLDER/src/Host/Host.csproj reference ./$OUTPUT_FOLDER/src/
 echo "Building solution"
 dotnet build $OUTPUT_FOLDER/$SOLUTION.sln
 dotnet test $OUTPUT_FOLDER/$SOLUTION.sln
-dotnet run --project $OUTPUT_FOLDER/src/Host/Host.csproj
+#dotnet run --project $OUTPUT_FOLDER/src/Host/Host.csproj
